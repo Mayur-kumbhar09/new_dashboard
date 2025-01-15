@@ -102,7 +102,9 @@ export default function SimpleTable() {
 
   const generateQRCodeValue = () => {
     const selectedData = rows.filter(row => selectedRows.includes(row.id));
-    return JSON.stringify(selectedData);
+    const billDetails = encodeURIComponent(JSON.stringify(selectedData));
+    const paymentUrl = `https://paymentgateway.com/pay?billDetails=${billDetails}`;
+    return paymentUrl;
   };
 
   return (
