@@ -1,6 +1,5 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -8,7 +7,6 @@ import Select from "@mui/material/Select";
 import Backdrop from "@mui/material/Backdrop";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
-
 import QRCode from "react-qr-code";
 import {
   Table,
@@ -22,7 +20,7 @@ import {
   Checkbox,
   Button,
 } from "@mui/material";
-// Sample data for rows and columns (replace this with your data as needed)
+
 const rows = [
   { id: 1, name: "John Doe", status: "Filled", quantity: "100" },
   { id: 2, name: "Jane Smith", status: "Open", quantity: "250" },
@@ -42,7 +40,6 @@ const columns = [
   { field: "quantity", headerName: "Quantity" },
 ];
 
-// Filter options (simplified)
 const predefinedFilters = [
   { label: "All", filterFn: () => true },
   { label: "Filled", filterFn: (row) => row.status === "Filled" },
@@ -53,6 +50,7 @@ const predefinedFilters = [
     filterFn: (row) => row.status === "Partially Filled",
   },
 ];
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -70,12 +68,11 @@ export default function SimpleTable() {
   const [selectedFilter, setSelectedFilter] = React.useState("All");
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [checked, setChecked] = React.useState(0);
-
   const [open, setOpen] = React.useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  console.log(checked);
+
   const handleCheckboxChange = (event, rowId) => {
     if (event.target.checked) {
       setSelectedRows((prevSelected) => [...prevSelected, rowId]);
@@ -84,20 +81,16 @@ export default function SimpleTable() {
         prevSelected.filter((id) => id !== rowId)
       );
     }
-    setChecked(rowId);
   };
-  // Function to handle the filter change
+
   const handleFilterChange = (filterFn, label) => {
     setSelectedFilter(label);
-    // Filter rows based on the selected filter
     setFilteredRows(rows.filter(filterFn));
   };
 
-  // Function to handle search input change
   const handleSearchChange = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
-    // Filter rows based on the search query
     setFilteredRows(
       rows.filter((row) =>
         columns.some((col) =>
@@ -106,12 +99,16 @@ export default function SimpleTable() {
       )
     );
   };
-  console.log(selectedFilter);
+
+  const generateQRCodeValue = () => {
+    const selectedData = rows.filter(row => selectedRows.includes(row.id));
+    return JSON.stringify(selectedData);
+  };
+
   return (
     <div style={{ overflow: "hidden", textAlign: "end" }}>
       <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
-        {/* Filter Dropdown */}
-        <FormControl sx={{ width: "15%", mt: 3 }}>
+        <FormControl sx={{ width: "7%", mt: 3 }}>
           <InputLabel id="demo-simple-select-label">Filter</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -132,7 +129,6 @@ export default function SimpleTable() {
           </Select>
         </FormControl>
 
-        {/* Search Bar */}
         <TextField
           label="Search"
           variant="outlined"
@@ -232,7 +228,7 @@ export default function SimpleTable() {
               <QRCode
                 size={256}
                 style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                value={40}
+                value={generateQRCodeValue()}
                 viewBox={`0 0 256 256`}
               />
             </div>
